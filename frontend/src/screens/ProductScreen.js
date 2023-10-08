@@ -19,10 +19,9 @@ function ProductScreen({ test }) {
 
   useEffect(() => {
     dispatch(listProductDetails(id));
-  }, []);
+  }, [dispatch, id]);
 
   const addToCartHandler = () => {
-    console.log("Add to Cart:", id);
     navigate(`/cart/${id}?qty=${qty}`);
   };
 

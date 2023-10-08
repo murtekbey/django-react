@@ -22,6 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-hx!whsjw667t&nw&2c1^n1i0w-#)%=%lom^=1*8#(u5=p4gt@-'
+PAYPAL_ID = "Aa0tcDjaosXZ0XfmaPKrurK2Fgcet1OJsmuVKPu4SlSBG7aiGhOrbUJqPfc6uBUlqi3mISbCIUXzUEym"
+PAYPAL_SECRET= "EDxQL-UpHWuM27LIQI0xQau9qF4hgMo8yrROUVS1Wbb1THoEcHRKsFhOJaUlH5rsAzn99Y2FuVn2OpGn"
+PAYPAL_BASE_URL= "https://api.sandbox.paypal.com"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

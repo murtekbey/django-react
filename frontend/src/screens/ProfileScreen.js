@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,7 +17,6 @@ function ProfileScreen() {
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   const dispatch = useDispatch();
 
