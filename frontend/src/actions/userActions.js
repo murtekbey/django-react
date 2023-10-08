@@ -11,7 +11,6 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
-  USER_UPDATE_PROFILE_RESET,
   USER_LOGOUT,
   USER_DETAILS_RESET,
 } from "../constants/userConstants";
@@ -47,10 +46,7 @@ export const login = (email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
+      payload: error.response && error.response.data.detail ? error.response.data.detail : error.message,
     });
   }
 };
@@ -92,10 +88,7 @@ export const register = (name, email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
+      payload: error.response && error.response.data.detail ? error.response.data.detail : error.message,
     });
   }
 };
@@ -126,10 +119,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_DETAILS_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
+      payload: error.response && error.response.data.detail ? error.response.data.detail : error.message,
     });
   }
 };
@@ -151,11 +141,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(
-      `/api/users/profile/update/`,
-      user,
-      config
-    );
+    const { data } = await axios.put(`/api/users/profile/update/`, user, config);
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
@@ -170,11 +156,8 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({
-      type: USER_DETAILS_FAIL,
-      payload:
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message,
+      type: USER_UPDATE_PROFILE_FAIL,
+      payload: error.response && error.response.data.detail ? error.response.data.detail : error.message,
     });
   }
 };

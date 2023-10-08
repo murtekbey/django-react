@@ -21,9 +21,7 @@ function RegisterScreen() {
 
   const dispatch = useDispatch();
 
-  const redirect = searchParams.get("redirect")
-    ? searchParams.get("redirect")
-    : "/";
+  const redirect = searchParams.get("redirect") ? searchParams.get("redirect") : "/";
 
   const userRegister = useSelector((state) => state.userRegister);
   const { error, loading, userInfo } = userRegister;
@@ -55,46 +53,22 @@ function RegisterScreen() {
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <Form.Control type="text" placeholder="Enter Name" value={name} onChange={(e) => setName(e.target.value)} required />
         </Form.Group>
 
         <Form.Group controlId="email">
           <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <Form.Control type="email" placeholder="Enter Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </Form.Group>
 
         <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <Form.Control type="password" placeholder="Enter Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Form.Group>
 
         <Form.Group controlId="confirmPassword">
           <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+          <Form.Control type="password" placeholder="Enter Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
         </Form.Group>
 
         <Button type="submit" variant="primary">
@@ -104,10 +78,7 @@ function RegisterScreen() {
 
       <Row className="py-3">
         <Col>
-          Have an Account?{" "}
-          <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
-            Sign In
-          </Link>
+          Have an Account? <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>Sign In</Link>
         </Col>
       </Row>
     </FormContainer>

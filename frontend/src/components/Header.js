@@ -34,9 +34,7 @@ function Header() {
                     Profile
                   </NavDropdown.Item>
 
-                  <NavDropdown.Item onClick={logoutHandler}>
-                    Log Out
-                  </NavDropdown.Item>
+                  <NavDropdown.Item onClick={logoutHandler}>Log Out</NavDropdown.Item>
                 </NavDropdown>
               ) : (
                 <Nav.Link as={Link} to="/login">
