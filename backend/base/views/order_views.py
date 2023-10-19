@@ -13,6 +13,8 @@ from base.serializers import ProductSerializer, OrderSerializer
 
 from datetime import datetime
 
+from base.adapters.paypal_adapter import createPaypalOrder, capturePaypalOrder
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -74,11 +76,18 @@ def getOrderById(request, pk):
         order = Order.objects.get(_id=pk)
         if user.is_staff or order.user == user:
             serializer = OrderSerializer(order, many=False)
-            return Response(serializer.data)
+            paypalOrderId = createPaypalOrder('USD', serializer.data['totalPrice'])['id']
+            print(paypalOrderId)
+            print(serializer.data)
+
+            data = serializer.data
+            data['orderId'] = paypalOrderId
+
+            return Response(data)
         else:
             Response({'detail': 'Not authorized to view this order'},
                      status=status.HTTP_400_BAD_REQUEST)
-    except:
+    except Exception:
         return Response({'detail': 'Order does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
 

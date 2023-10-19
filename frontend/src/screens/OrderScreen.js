@@ -17,7 +17,7 @@ function OrderScreen() {
   const { id } = useParams();
   const orderId = id;
 
-  const [sdkReady, setSdkReady] = useState(false);
+  const [paypalOrderId, setPaypalOrderId] = useState("");
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, error, loading } = orderDetails;
@@ -30,20 +30,6 @@ function OrderScreen() {
     itemsPrice = order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0).toFixed(2);
   }
 
-  // Client ID
-  // Aa0tcDjaosXZ0XfmaPKrurK2Fgcet1OJsmuVKPu4SlSBG7aiGhOrbUJqPfc6uBUlqi3mISbCIUXzUEym
-
-  const addPayPalScript = () => {
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "https://www.paypal.com/sdk/js?client-id=Aa0tcDjaosXZ0XfmaPKrurK2Fgcet1OJsmuVKPu4SlSBG7aiGhOrbUJqPfc6uBUlqi3mISbCIUXzUEym&currency=USD";
-    script.async = true;
-    script.onload = () => {
-      setSdkReady(true);
-    };
-    document.body.appendChild(script);
-  };
-
   const initialOptions = {
     clientId: "Aa0tcDjaosXZ0XfmaPKrurK2Fgcet1OJsmuVKPu4SlSBG7aiGhOrbUJqPfc6uBUlqi3mISbCIUXzUEym",
     currency: "USD",
@@ -54,14 +40,8 @@ function OrderScreen() {
     if (!order || successPay || order._id !== Number(orderId)) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(listOrderDetails(orderId));
-    } else if (!order.isPaid) {
-      if (!window.paypal) {
-        addPayPalScript();
-      } else {
-        setSdkReady(true);
-      }
     }
-  }, [dispatch, order, orderId, successPay]);
+  }, [dispatch, order, orderId, successPay, paypalOrderId]);
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));
@@ -172,13 +152,21 @@ function OrderScreen() {
 
               {!order.isPaid && (
                 <ListGroup.Item>
-                  {!sdkReady ? (
-                    <Loader />
-                  ) : (
-                    <PayPalScriptProvider options={initialOptions}>
-                      <PayPalButtons />
-                    </PayPalScriptProvider>
-                  )}
+                  <PayPalScriptProvider options={initialOptions}>
+                    <PayPalButtons createOrder={async () => {
+                      return order.orderId
+                    }}
+                      onApprove={async () => {
+                        return fetch(`http://localhost:8000/api/payments/capture_order/${order.orderId}`, { method: 'GET' })
+                          .then((res) => { return res.json() }).then((data) => {
+                            if (data.status === "COMPLETED") {
+                              order.isPaid = true;
+                            }
+                          })
+                      }}
+
+                    />
+                  </PayPalScriptProvider>
                 </ListGroup.Item>
               )}
             </ListGroup>

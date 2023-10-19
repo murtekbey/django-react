@@ -47,6 +47,8 @@ def make_paypal_payment(amount, currency, return_url, cancel_url):
 
     payment_response = requests.post(payment_url, data=json.dumps(
         payment_payload), headers=payment_headers)
+    
+    
     print(payment_response.text)
     if payment_response.status_code != 201:
         return False, 'Failed to create PayPal payment.', None
