@@ -32,9 +32,6 @@ token_payload = {'grant_type': 'client_credentials'}
 token_headers = {'Accept': 'application/json', 'Accept-Language': 'en_US'}
 
 
-
-
-
 @api_view(['GET'])
 def createOrder(request, orderId):
     order = Order.objects.get(_id=orderId)
@@ -69,10 +66,9 @@ def captureOrder(request, orderId):
     order_response = requests.post(
         order_url + '/' + orderId + '/capture', headers=headers)
 
-    print(order_response)
     if order_response.status_code != 201:
         return Response({"detail": "Failed to create order"}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-
+    
     return Response(order_response.json(), status=status.HTTP_200_OK)
 
 

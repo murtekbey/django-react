@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,18 +6,16 @@ import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import CheckoutSteps from "../components/CheckoutSteps";
 
 import { listOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
+import axios from "axios";
+
 function OrderScreen() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
   const orderId = id;
-
-  const [paypalOrderId, setPaypalOrderId] = useState("");
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, error, loading } = orderDetails;
@@ -41,7 +39,8 @@ function OrderScreen() {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(listOrderDetails(orderId));
     }
-  }, [dispatch, order, orderId, successPay, paypalOrderId]);
+  }, [dispatch, order, orderId, successPay]);
+
 
   const successPaymentHandler = (paymentResult) => {
     dispatch(payOrder(orderId, paymentResult));
@@ -157,14 +156,13 @@ function OrderScreen() {
                       return order.orderId
                     }}
                       onApprove={async () => {
-                        return fetch(`http://localhost:8000/api/payments/capture_order/${order.orderId}`, { method: 'GET' })
-                          .then((res) => { return res.json() }).then((data) => {
+                        return await axios.get(`/api/payments/capture_order/${order.orderId}`)
+                          .then((response) => { return response.data }).then((data) => {
                             if (data.status === "COMPLETED") {
-                              order.isPaid = true;
+                              successPaymentHandler(order._id, data)
                             }
                           })
                       }}
-
                     />
                   </PayPalScriptProvider>
                 </ListGroup.Item>

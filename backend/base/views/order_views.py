@@ -77,8 +77,6 @@ def getOrderById(request, pk):
         if user.is_staff or order.user == user:
             serializer = OrderSerializer(order, many=False)
             paypalOrderId = createPaypalOrder('USD', serializer.data['totalPrice'])['id']
-            print(paypalOrderId)
-            print(serializer.data)
 
             data = serializer.data
             data['orderId'] = paypalOrderId
