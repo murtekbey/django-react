@@ -13,6 +13,7 @@ import { ORDER_PAY_RESET } from "../constants/orderConstants";
 import axios from "axios";
 
 function OrderScreen() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
   const orderId = id;
@@ -22,6 +23,9 @@ function OrderScreen() {
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
 
   let itemsPrice = Number(0);
   if (!loading && !error) {
@@ -35,6 +39,10 @@ function OrderScreen() {
   };
 
   useEffect(() => {
+    if (!userInfo) {
+      navigate('/login')
+    }
+
     if (!order || successPay || order._id !== Number(orderId)) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch(listOrderDetails(orderId));
